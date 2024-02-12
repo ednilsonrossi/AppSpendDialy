@@ -1,10 +1,13 @@
 <resources>
-    <string name="app_name">Spend Dialy</string>
+    <string name="app_name">Despesas do Gustavo</string>
     <string name="label_one">Gasto diário</string>
-    <string name="label_two">Data</string>
+    <string name="label_two">Data de Hoje</string>
     <string name="limit_daily_spend">Valor limite de gastos por dia</string>
     <string name="expense_registry">Registro de Despesa</string>
     <string name="cancel">Cancelar</string>
     <string name="registry">Registrar</string>
     <string name="new_expense">Nova despesa</string>
+    <string name="expense_today">Gastei hoje</string>
+    <string name="acumulate_balance">Meu saldo acumulado</string>
+    <string name="no_data">NO DATA</string>
 </resources>

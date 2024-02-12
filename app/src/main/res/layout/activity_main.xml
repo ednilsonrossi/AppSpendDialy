@@ -33,8 +33,8 @@
         android:id="@+id/text_daily_spend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/value_color"
         android:text="R$ -"
+        android:textColor="@color/value_color"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/text_label1"
@@ -43,9 +43,9 @@
 
     <TextView
         android:id="@+id/text_daily_date"
-        android:text="??/??"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="??/??"
         android:textColor="@color/value_color"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -57,10 +57,10 @@
         android:id="@+id/text_label3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Já gastei"
+        android:layout_marginTop="8dp"
+        android:text="@string/expense_today"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="@id/text_daily_spend"
         app:layout_constraintStart_toStartOf="@id/text_daily_spend"
         app:layout_constraintTop_toBottomOf="@id/text_daily_spend" />
@@ -69,7 +69,7 @@
         android:id="@+id/text_label4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Posso gastar"
+        android:text="@string/acumulate_balance"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/text_daily_date"
@@ -78,9 +78,9 @@
 
     <TextView
         android:id="@+id/text_alredy_spend"
-        android:text="R$ -"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="R$ -"
         android:textColor="@color/value_color"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -90,9 +90,9 @@
 
     <TextView
         android:id="@+id/text_can_spend"
-        android:text="R$ -"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="R$ -"
         android:textColor="@color/value_color"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -100,16 +100,53 @@
         app:layout_constraintStart_toStartOf="@id/text_label4"
         app:layout_constraintTop_toBottomOf="@id/text_label4" />
 
-
-
     <Button
         android:id="@+id/button_new_expense"
         android:layout_width="wrap_content"
-        android:textAllCaps="true"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/new_expense"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/new_expense"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/text_label5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Consumo"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_alredy_spend" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_new_expense"
+        app:layout_constraintEnd_toEndOf="@id/text_label5"
+        app:layout_constraintStart_toStartOf="@id/text_label5"
+        app:layout_constraintTop_toBottomOf="@id/text_label5" />
+
+    <!--
+    <TextView
+        android:id="@+id/text_empty_values"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_data"
+        android:textColor="@color/value_color"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button_new_expense"
+        app:layout_constraintEnd_toEndOf="@id/text_label5"
+        app:layout_constraintStart_toStartOf="@id/text_label5"
+        app:layout_constraintTop_toBottomOf="@id/text_label5" />
+        -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

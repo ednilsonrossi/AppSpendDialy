@@ -11,35 +11,64 @@ import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import br.edu.ednilsonrossi.spenddialy.model.entity.DayExpense
-import br.edu.ednilsonrossi.spenddialy.model.entity.Expense
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
-    private lateinit var day: DayExpense
+    private val PERIOD_DATE = "date"
+    private val DAY_EXPENSE_VALUE = "day_expense_value"
+    private val ACCUMULATE = "acumulate"
 
-    private lateinit var daySpendText: TextView
-    private lateinit var dateSpendText: TextView
-    private lateinit var alredySpendText: TextView
-    private lateinit var canSpendText: TextView
-    private lateinit var newExpenseButton: Button
 
+    private lateinit var period: ExpensePeriod
+
+    private lateinit var textDaySpend: TextView
+    private lateinit var textDateSpend: TextView
+    private lateinit var textAlredySpend: TextView
+    private lateinit var textCanSpend: TextView
+    private lateinit var buttonNewExpense: Button
+    private lateinit var recyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        daySpendText = findViewById(R.id.text_daily_spend)
-        dateSpendText = findViewById(R.id.text_daily_date)
-        alredySpendText = findViewById(R.id.text_alredy_spend)
-        canSpendText = findViewById(R.id.text_can_spend)
-        newExpenseButton = findViewById(R.id.button_new_expense)
-        newExpenseButton.setOnClickListener(this)
-        newExpenseButton.isEnabled = false
+        recyclerView = findViewById(R.id.recyclerview)
+        textDaySpend = findViewById(R.id.text_daily_spend)
+        textDateSpend = findViewById(R.id.text_daily_date)
+        textAlredySpend = findViewById(R.id.text_alredy_spend)
+        textCanSpend = findViewById(R.id.text_can_spend)
+        buttonNewExpense = findViewById(R.id.button_new_expense)
+        buttonNewExpense.setOnClickListener(this)
+        buttonNewExpense.isEnabled = false
+
+        configRecyclerView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadPrefs()
+
+        if(::period.isInitialized) {
+            val data = period.date
+            val today = LocalDate.now()
+            if (data < today) {
+                val days = Period.between(data, today).days
+                period = ExpensePeriod(period.dayExpenseValue, period.getBalance() + ( (days-1) * period.dayExpenseValue), today)
+            }
+        }
+        updateUI()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        ExpensePeriodSharedPreferences.save(this, period)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,7 +78,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_define_daily_spend -> {
+            R.id.action_init_period -> {
                 showDialog()
                 true
             }
@@ -66,15 +95,23 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     private fun updateUI() {
 
-        if (day != null) {
+        if (::period.isInitialized) {
 
-            daySpendText.text = "R$ ${day.dayExpenseValue}"
+            textDaySpend.text = "R$ ${period.dayExpenseValue}"
             val formatter = DateTimeFormatter.ofPattern("dd/MM", Locale("pt", "BR"))
-            dateSpendText.text = day.date.format(formatter)
-            canSpendText.text = "R$ ${day.getBalance()}"
-            alredySpendText.text = "R$ ${day.totalSpent}"
+            textDateSpend.text = period.date.format(formatter)
+            textCanSpend.text = "R$ ${period.getBalance()}"
+            textAlredySpend.text = "R$ ${period.getTotalSpent()}"
 
-            newExpenseButton.isEnabled = true
+            buttonNewExpense.isEnabled = true
+            recyclerView.adapter = ExpenseAdapter(period.expenses)
+        }
+    }
+
+    private fun configRecyclerView(){
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        if (::period.isInitialized){
+            recyclerView.adapter = ExpenseAdapter(period.expenses)
         }
     }
 
@@ -90,7 +127,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             .setPositiveButton(getString(R.string.registry)) { dialogInterface: DialogInterface, _: Int ->
                 val description = descriptionEditText.text.toString()
                 val value = valueEditText.text.toString().toDouble()
-                day.newExpense(Expense(value, description, LocalDate.now()))
+                period.newExpense(Expense(value, description))
                 updateUI()
                 dialogInterface.dismiss()
             }
@@ -112,7 +149,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             .setCancelable(false)
             .setPositiveButton(getString(R.string.registry)) { dialogInterface: DialogInterface, _: Int ->
                 val value = editTextValue.text.toString()
-                day = DayExpense(value.toDouble(), LocalDate.now())
+                period = ExpensePeriod(value.toDouble(), 0.0, LocalDate.now())
+                configRecyclerView()
                 updateUI()
                 dialogInterface.dismiss()
             }
@@ -124,4 +162,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         dialog.show()
     }
 
+    private fun loadPrefs(){
+        val obj = ExpensePeriodSharedPreferences.load(this)
+        if (obj != null){
+            period = obj
+        }
+    }
 }

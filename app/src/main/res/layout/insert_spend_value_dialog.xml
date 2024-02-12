@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/limit_daily_spend"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:textAlignment="center" />
 
 </LinearLayout>
