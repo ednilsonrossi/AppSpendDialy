@@ -97,11 +97,11 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         if (::period.isInitialized) {
 
-            textDaySpend.text = "R$ ${period.dayExpenseValue}"
+            textDaySpend.text = String.format("R$ %.2f", period.dayExpenseValue )
             val formatter = DateTimeFormatter.ofPattern("dd/MM", Locale("pt", "BR"))
             textDateSpend.text = period.date.format(formatter)
-            textCanSpend.text = "R$ ${period.getBalance()}"
-            textAlredySpend.text = "R$ ${period.getTotalSpent()}"
+            textCanSpend.text = String.format("R$ %.2f", period.getBalance())
+            textAlredySpend.text = String.format("R$ %.2f", period.getTotalSpent() )
 
             buttonNewExpense.isEnabled = true
             recyclerView.adapter = ExpenseAdapter(period.expenses)
